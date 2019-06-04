@@ -3,7 +3,9 @@ using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace TexturePacker
 {
@@ -16,12 +18,12 @@ namespace TexturePacker
         /// Path of the source texture on disk
         /// </summary>
         public string Source;
-        
+
         /// <summary>
         /// Width in Pixels
         /// </summary>
         public int Width;
-        
+
         /// <summary>
         /// Height in Pixels
         /// </summary>
@@ -37,7 +39,7 @@ namespace TexturePacker
         /// Split Horizontally (textures are stacked up)
         /// </summary>
         Horizontal,
-        
+
         /// <summary>
         /// Split verticaly (textures are side by side)
         /// </summary>
@@ -50,12 +52,12 @@ namespace TexturePacker
     public enum BestFitHeuristic
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         Area,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         MaxOneAxis,
     }
@@ -74,7 +76,7 @@ namespace TexturePacker
         /// Texture this node represents
         /// </summary>
         public TextureInfo Texture;
-        
+
         /// <summary>
         /// If this is an empty node, indicates how to split it when it will  be used
         /// </summary>
@@ -90,7 +92,7 @@ namespace TexturePacker
         /// Width in pixels
         /// </summary>
         public int Width;
-        
+
         /// <summary>
         /// Height in Pixel
         /// </summary>
@@ -100,6 +102,30 @@ namespace TexturePacker
         /// List of the nodes in the Atlas. This will represent all the textures that are packed into it and all the remaining free space
         /// </summary>
         public List<Node> Nodes;
+    }
+
+    public class MinifiedAtlas
+    {
+        public List<MinifiedNode> Nodes;
+
+        public static explicit operator MinifiedAtlas(Atlas atlas)
+        {
+            MinifiedAtlas minAtlas = new MinifiedAtlas();
+
+            minAtlas.Nodes = atlas.Nodes.Select(n => new MinifiedNode()
+            {
+                Bounds = n.Bounds,
+                Name = Path.GetFileNameWithoutExtension(n.Texture.Source)
+            }).ToList();
+
+            return minAtlas;
+        }
+    }
+
+    public class MinifiedNode
+    {
+        public Rectangle Bounds;
+        public string Name;
     }
 
     /// <summary>
@@ -121,22 +147,22 @@ namespace TexturePacker
         /// Stream that recieves all the error info
         /// </summary>
         public StringWriter Error;
-        
+
         /// <summary>
         /// Number of pixels that separate textures in the atlas
         /// </summary>
         public int Padding;
-        
+
         /// <summary>
         /// Size of the atlas in pixels. Represents one axis, as atlases are square
         /// </summary>
         public int AtlasSize;
-        
+
         /// <summary>
         /// Toggle for debug mode, resulting in debug atlasses to check the packing algorithm
         /// </summary>
         public bool DebugMode;
-        
+
         /// <summary>
         /// Which heuristic to use when doing the fit
         /// </summary>
@@ -238,6 +264,23 @@ namespace TexturePacker
             tw.WriteLine("--- ERROR -----------------------------------------");
             tw.WriteLine(Error.ToString());
             tw.Close();
+        }
+
+        public void SerializeAtlasses()
+        {
+            string folderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            int counter = 0;
+            foreach (var atlas in Atlasses)
+            {
+                string filePath = Path.Combine(folderPath, $"atlas-{counter}.json");
+                string filePathMin = Path.Combine(folderPath, $"atlas-{counter}.min.json");
+
+                File.WriteAllText(filePath, JsonConvert.SerializeObject(atlas, Formatting.Indented));
+                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas)atlas, Formatting.Indented));
+
+                ++counter;
+            }
         }
 
         private void ScanForTextures(string _Path, string _Wildcard)
@@ -448,14 +491,11 @@ namespace TexturePacker
 
             return img;
         }
-
     }
 
-
-
-    class Program
+    internal class Program
     {
-        static void DisplayInfo()
+        private static void DisplayInfo()
         {
             Console.WriteLine("  usage: TexturePacker -sp xxx -ft xxx -o xxx [-s xxx] [-b x] [-d]");
             Console.WriteLine("            -sp | --sourcepath : folder to recursively scan for textures to pack");
@@ -467,7 +507,7 @@ namespace TexturePacker
             Console.WriteLine("  ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug");
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("TexturePacker - Package rect/non pow 2 textures into square power of 2 atlas");
 
@@ -558,6 +598,7 @@ namespace TexturePacker
 
             packer.Process(sourcePath, searchPattern, textureSize, border, debug);
             packer.SaveAtlasses(outName);
+            packer.SerializeAtlasses();
         }
     }
 }
