@@ -196,7 +196,17 @@ namespace TexturePacker
                             && (int)textures.Average(tex => tex.Width * tex.Height) == textures[0].Width * textures[1].Height;
 
             if (AtlasSize == 1024 && areIcons)
-                AtlasSize = (int)Math.Ceiling(Math.Sqrt(textures.Count)) * textures[0].Width;
+            {
+                int atlasSize = (int)Math.Ceiling(Math.Sqrt(textures.Count)) * textures[0].Width;
+
+                if (atlasSize <= 8192)
+                {
+                    Console.WriteLine($"Icon mode detected, resizing atlas to {AtlasSize} pixels.");
+                    AtlasSize = atlasSize;
+                }
+                else
+                    Console.WriteLine($"Atlas exceeded max size of 8192 pixels ({atlasSize})");
+            }
 
             //2: generate as many atlasses as needed (with the latest one as small as possible)
             Atlasses = new List<Atlas>();
