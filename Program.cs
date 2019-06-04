@@ -104,10 +104,23 @@ namespace TexturePacker
         public List<Node> Nodes;
     }
 
+    /// <summary>
+    /// Minified Atlas class
+    /// </summary>
     public class MinifiedAtlas
     {
+        /// <summary>
+        /// The nodes
+        /// </summary>
         public List<MinifiedNode> Nodes;
 
+        /// <summary>
+        /// Performs an explicit conversion from <see cref="Atlas"/> to <see cref="MinifiedAtlas"/>.
+        /// </summary>
+        /// <param name="atlas">The atlas.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static explicit operator MinifiedAtlas(Atlas atlas)
         {
             MinifiedAtlas minAtlas = new MinifiedAtlas();
@@ -122,9 +135,19 @@ namespace TexturePacker
         }
     }
 
+    /// <summary>
+    /// Mified Node (used to represent minimum quantity of information possible)
+    /// </summary>
     public class MinifiedNode
     {
+        /// <summary>
+        /// The bounds
+        /// </summary>
         public Rectangle Bounds;
+
+        /// <summary>
+        /// The name
+        /// </summary>
         public string Name;
     }
 
@@ -293,7 +316,7 @@ namespace TexturePacker
                 string filePathMin = Path.Combine(folderPath, $"atlas-{counter}.min.json");
 
                 File.WriteAllText(filePath, JsonConvert.SerializeObject(atlas, Formatting.Indented));
-                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas)atlas, Formatting.Indented));
+                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas)atlas));
 
                 ++counter;
             }
