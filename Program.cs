@@ -192,6 +192,12 @@ namespace TexturePacker
             List<TextureInfo> textures = new List<TextureInfo>();
             textures = SourceTextures.ToList();
 
+            bool areIcons = textures.All(tex => tex.Width == tex.Height)
+                            && (int)textures.Average(tex => tex.Width * tex.Height) == textures[0].Width * textures[1].Height;
+
+            if (AtlasSize == 1024 && areIcons)
+                AtlasSize = (int)Math.Ceiling(Math.Sqrt(textures.Count)) * textures[0].Width;
+
             //2: generate as many atlasses as needed (with the latest one as small as possible)
             Atlasses = new List<Atlas>();
             while (textures.Count > 0)
