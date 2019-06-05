@@ -4,153 +4,11 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Newtonsoft.Json;
+using TexturePacker.Lib;
 
 namespace TexturePacker
 {
-    /// <summary>
-    /// Represents a Texture in an atlas
-    /// </summary>
-    public class TextureInfo
-    {
-        /// <summary>
-        /// Path of the source texture on disk
-        /// </summary>
-        public string Source;
-
-        /// <summary>
-        /// Width in Pixels
-        /// </summary>
-        public int Width;
-
-        /// <summary>
-        /// Height in Pixels
-        /// </summary>
-        public int Height;
-    }
-
-    /// <summary>
-    /// Indicates in which direction to split an unused area when it gets used
-    /// </summary>
-    public enum SplitType
-    {
-        /// <summary>
-        /// Split Horizontally (textures are stacked up)
-        /// </summary>
-        Horizontal,
-
-        /// <summary>
-        /// Split verticaly (textures are side by side)
-        /// </summary>
-        Vertical,
-    }
-
-    /// <summary>
-    /// Different types of heuristics in how to use the available space
-    /// </summary>
-    public enum BestFitHeuristic
-    {
-        /// <summary>
-        ///
-        /// </summary>
-        Area,
-
-        /// <summary>
-        ///
-        /// </summary>
-        MaxOneAxis,
-    }
-
-    /// <summary>
-    /// A node in the Atlas structure
-    /// </summary>
-    public class Node
-    {
-        /// <summary>
-        /// Bounds of this node in the atlas
-        /// </summary>
-        public Rectangle Bounds;
-
-        /// <summary>
-        /// Texture this node represents
-        /// </summary>
-        public TextureInfo Texture;
-
-        /// <summary>
-        /// If this is an empty node, indicates how to split it when it will  be used
-        /// </summary>
-        public SplitType SplitType;
-    }
-
-    /// <summary>
-    /// The texture atlas
-    /// </summary>
-    public class Atlas
-    {
-        /// <summary>
-        /// Width in pixels
-        /// </summary>
-        public int Width;
-
-        /// <summary>
-        /// Height in Pixel
-        /// </summary>
-        public int Height;
-
-        /// <summary>
-        /// List of the nodes in the Atlas. This will represent all the textures that are packed into it and all the remaining free space
-        /// </summary>
-        public List<Node> Nodes;
-    }
-
-    /// <summary>
-    /// Minified Atlas class
-    /// </summary>
-    public class MinifiedAtlas
-    {
-        /// <summary>
-        /// The nodes
-        /// </summary>
-        public List<MinifiedNode> Nodes;
-
-        /// <summary>
-        /// Performs an explicit conversion from <see cref="Atlas"/> to <see cref="MinifiedAtlas"/>.
-        /// </summary>
-        /// <param name="atlas">The atlas.</param>
-        /// <returns>
-        /// The result of the conversion.
-        /// </returns>
-        public static explicit operator MinifiedAtlas(Atlas atlas)
-        {
-            MinifiedAtlas minAtlas = new MinifiedAtlas();
-
-            minAtlas.Nodes = atlas.Nodes.Select(n => new MinifiedNode()
-            {
-                Bounds = n.Bounds,
-                Name = Path.GetFileNameWithoutExtension(n.Texture.Source)
-            }).ToList();
-
-            return minAtlas;
-        }
-    }
-
-    /// <summary>
-    /// Mified Node (used to represent minimum quantity of information possible)
-    /// </summary>
-    public class MinifiedNode
-    {
-        /// <summary>
-        /// The bounds
-        /// </summary>
-        public Rectangle Bounds;
-
-        /// <summary>
-        /// The name
-        /// </summary>
-        public string Name;
-    }
-
     /// <summary>
     /// Objects that performs the packing task. Takes a list of textures as input and generates a set of atlas textures/definition pairs
     /// </summary>
@@ -316,7 +174,7 @@ namespace TexturePacker
                 string filePathMin = Path.Combine(folderPath, $"atlas-{counter}.min.json");
 
                 File.WriteAllText(filePath, JsonConvert.SerializeObject(atlas, Formatting.Indented));
-                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas)atlas));
+                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas<MinifiedNode>)atlas));
 
                 ++counter;
             }

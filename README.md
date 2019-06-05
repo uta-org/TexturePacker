@@ -1,7 +1,19 @@
-TexturePacker
-=============
+# TexturePacker
 
-Small C# app that packs all the png from a folder int a set of square atlas textures
+Requires .NET 4.6 and C# 7
+
+> Small C# app that packs all the png from a folder int a set of square atlas textures
+
+## Features 
+
+* Supports download by specifing a folder by CLI.
+* It takes care of current folder hierarchy.
+
+### Supported platforms
+
+Windows and Linux (Mono).
+
+## Usage
 
 Usage: TexturePacker -sp xxx -ft xxx -o xxx [-s xxx] [-b x] [-d]
           -sp | --sourcepath : folder to recursively scan for textures to pack
@@ -12,3 +24,27 @@ Usage: TexturePacker -sp xxx -ft xxx -o xxx [-s xxx] [-b x] [-d]
           -d  | --debug      : output debug info in the atlas
 
 Ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug
+
+## Issues
+
+Having issues? Just report in [the issue section](/issues). **Thanks for the feedback!**
+
+## Contribute
+
+Fork this repository, make your changes and then issue a pull request. If you find bugs or have new ideas that you do not want to implement yourself, file a bug report.
+
+## Donate
+
+Become a patron, by simply clicking on this button (**very appreciated!**):
+
+[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/z3nth10n)
+
+... Or if you prefer a one-time donation:
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/z3nth10n)
+
+## Copyright
+
+Copyright (c) 2019 z3nth10n (United Teamwork Association).
+
+License: MIT
