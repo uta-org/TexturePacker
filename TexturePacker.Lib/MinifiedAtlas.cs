@@ -9,7 +9,7 @@ namespace TexturePacker.Lib
     /// Minified Atlas class
     /// </summary>
     [Serializable]
-    public class MinifiedAtlas<T>
+    public sealed class MinifiedAtlas<T>
         where T : IMinifiedNode, new()
     {
         /// <summary>

@@ -1,11 +1,13 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace TexturePacker.Lib
 {
     /// <summary>
     /// A node in the Atlas structure
     /// </summary>
-    public class Node
+    [Serializable]
+    public sealed class Node
     {
         /// <summary>
         /// Bounds of this node in the atlas

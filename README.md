@@ -25,6 +25,10 @@ Usage: TexturePacker -sp xxx -ft xxx -o xxx [-s xxx] [-b x] [-d]
 
 Ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug
 
+### Packer script
+
+In [folder *scripts*](/scripts/) you can see `packer.cmd` a Windows Shell script **including an example.**
+
 ## Issues
 
 Having issues? Just report in [the issue section](/issues). **Thanks for the feedback!**

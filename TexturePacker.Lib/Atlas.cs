@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TexturePacker.Lib
 {
     /// <summary>
     /// The texture atlas
     /// </summary>
-    public class Atlas
+    [Serializable]
+    public sealed class Atlas
     {
         /// <summary>
         /// Width in pixels

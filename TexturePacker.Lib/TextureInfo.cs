@@ -1,9 +1,12 @@
-﻿namespace TexturePacker.Lib
+﻿using System;
+
+namespace TexturePacker.Lib
 {
     /// <summary>
     /// Represents a Texture in an atlas
     /// </summary>
-    public class TextureInfo
+    [Serializable]
+    public sealed class TextureInfo
     {
         /// <summary>
         /// Path of the source texture on disk
