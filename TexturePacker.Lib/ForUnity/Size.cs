@@ -21,10 +21,20 @@ namespace System.Drawing
             Height = height;
         }
 
+        public static implicit operator SizeF(Size p)
+        {
+            return new SizeF(p.Width, p.Height);
+        }
+
         public static explicit operator Point(Size size)
         {
             return new Point(size.Width, size.Height);
         }
+
+        //public static implicit operator Size(UnityEngine.Vector2 v)
+        //{
+        //    return new Size((int)v.x, (int)v.y);
+        //}
 
         public static Size operator +(Size sz1, Size sz2)
         {
@@ -57,25 +67,25 @@ namespace System.Drawing
             return new Size(sz1.Width + sz2.Width, sz1.Height + sz2.Height);
         }
 
-        //public static Size Ceiling(SizeF value)
-        //{
-        //    return new Size((int)Math.Ceiling(value.Width), (int)Math.Ceiling(value.Height));
-        //}
+        public static Size Ceiling(SizeF value)
+        {
+            return new Size((int)Math.Ceiling(value.Width), (int)Math.Ceiling(value.Height));
+        }
 
         public static Size Subtract(Size sz1, Size sz2)
         {
             return new Size(sz1.Width - sz2.Width, sz1.Height - sz2.Height);
         }
 
-        //public static Size Truncate(SizeF value)
-        //{
-        //    return new Size((int)value.Width, (int)value.Height);
-        //}
+        public static Size Truncate(SizeF value)
+        {
+            return new Size((int)value.Width, (int)value.Height);
+        }
 
-        //public static Size Round(SizeF value)
-        //{
-        //    return new Size((int)Math.Round(value.Width), (int)Math.Round(value.Height));
-        //}
+        public static Size Round(SizeF value)
+        {
+            return new Size((int)Math.Round(value.Width), (int)Math.Round(value.Height));
+        }
 
         public bool Equals(Size other)
         {

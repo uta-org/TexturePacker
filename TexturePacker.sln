@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker.Lib", "Textur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker", "TexturePacker\TexturePacker.csproj", "{03B592BD-9C25-4E04-BBB0-856E27BAD336}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker.Lib.UnityEditor", "TexturePacker.Lib.UnityEditor\TexturePacker.Lib.UnityEditor.csproj", "{84506000-F9BD-4016-B655-9B03219F63B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|x86.ActiveCfg = Release|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|x86.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|x86.Build.0 = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|Any CPU.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|Any CPU.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|x86.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|x86.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

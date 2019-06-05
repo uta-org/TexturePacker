@@ -34,10 +34,20 @@ namespace System.Drawing
         public int X { get; set; }
         public int Y { get; set; }
 
+        public static implicit operator PointF(Point p)
+        {
+            return new PointF(p.X, p.Y);
+        }
+
         public static explicit operator Size(Point p)
         {
             return new Size(p.X, p.Y);
         }
+
+        //public static implicit operator Point(UnityEngine.Vector2 v)
+        //{
+        //    return new Point((int)v.x, (int)v.y);
+        //}
 
         public static Point operator +(Point pt, Size sz)
         {
@@ -64,25 +74,25 @@ namespace System.Drawing
             return new Point(pt.X + sz.Width, pt.Y + sz.Height);
         }
 
-        //public static Point Ceiling(PointF value)
-        //{
-        //    return new Point((int)Math.Ceiling(value.X), (int)Math.Ceiling(value.Y));
-        //}
+        public static Point Ceiling(PointF value)
+        {
+            return new Point((int)Math.Ceiling(value.X), (int)Math.Ceiling(value.Y));
+        }
 
-        //public static Point Round(PointF value)
-        //{
-        //    return new Point((int)Math.Round(value.X), (int)Math.Round(value.Y));
-        //}
+        public static Point Round(PointF value)
+        {
+            return new Point((int)Math.Round(value.X), (int)Math.Round(value.Y));
+        }
 
         public static Point Subtract(Point pt, Size sz)
         {
             return new Point(pt.X - sz.Width, pt.Y - sz.Height);
         }
 
-        //public static Point Truncate(PointF value)
-        //{
-        //    return new Point((int)value.X, (int)value.Y);
-        //}
+        public static Point Truncate(PointF value)
+        {
+            return new Point((int)value.X, (int)value.Y);
+        }
 
         public bool Equals(Point other)
         {
