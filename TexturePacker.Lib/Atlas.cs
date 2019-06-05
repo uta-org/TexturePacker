@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#if UNITY_TEAM_LICENSE
+namespace UnityTexturePacker.Lib
+#else
 namespace TexturePacker.Lib
+#endif
 {
     /// <summary>
     /// The texture atlas

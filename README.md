@@ -37,6 +37,8 @@ Having issues? Just report in [the issue section](/issues). **Thanks for the fee
 
 Fork this repository, make your changes and then issue a pull request. If you find bugs or have new ideas that you do not want to implement yourself, file a bug report.
 
+**Note:** You'll need to **Build** `Texture.Lib` using *Debug configuration* (because I created several configs and I need to create a forced DLL reference to a source that is unpushed).
+
 ## Donate
 
 Become a patron, by simply clicking on this button (**very appreciated!**):

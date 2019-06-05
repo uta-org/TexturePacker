@@ -11,6 +11,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		ForUnity|Any CPU = ForUnity|Any CPU
+		ForUnity|x86 = ForUnity|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -19,6 +21,10 @@ Global
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|x86.Build.0 = Debug|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|Any CPU.ActiveCfg = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|Any CPU.Build.0 = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|x86.ActiveCfg = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|x86.Build.0 = ForUnity|Any CPU
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|x86.ActiveCfg = Release|Any CPU
@@ -27,6 +33,10 @@ Global
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|x86.Build.0 = Debug|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|Any CPU.ActiveCfg = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|Any CPU.Build.0 = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|x86.ActiveCfg = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|x86.Build.0 = ForUnity|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|x86.ActiveCfg = Release|Any CPU
