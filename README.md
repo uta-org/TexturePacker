@@ -39,7 +39,7 @@ Fork this repository, make your changes and then issue a pull request. If you fi
 
 ## Disclaimer
 
-Currently using [`Rectangle` class from Unity-WinForms]() for ForUnity build configuration mode. Thanks to @Meragon!
+Currently using serveral classes (Point, Rectangle && Size) from [Unity-WinForms](https://github.com/Meragon/Unity-WinForms) for `ForUnity` *build configuration mode*. **Thanks to [@Meragon](https://github.com/Meragon)!**
 
 ## Donate
 
