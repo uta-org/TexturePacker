@@ -32,23 +32,27 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ForUnity|AnyCPU'">
     <OutputPath>bin\ForUnity\</OutputPath>
-    <DefineConstants>TRACE;UNITY_TEAM_LICENSE</DefineConstants>
+    <DefineConstants>TRACE;UNITY</DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" Condition="$(DefineConstants.Contains('UNITY')) == 'False'" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atlas.cs" />
     <Compile Include="Enums\BestFitHeuristic.cs" />
+    <Compile Include="ForUnity\Point.cs" />
+    <Compile Include="ForUnity\Rectangle.cs" />
+    <Compile Include="ForUnity\Size.cs" />
     <Compile Include="IMinifiedNode.cs" />
     <Compile Include="MinifiedAtlas.cs" />
     <Compile Include="MinifiedNode.cs" />

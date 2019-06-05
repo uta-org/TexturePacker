@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-#if UNITY_TEAM_LICENSE
+#if UNITY
 namespace UnityTexturePacker.Lib
 #else
 namespace TexturePacker.Lib

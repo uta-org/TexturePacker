@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-#if UNITY_TEAM_LICENSE
+#if UNITY
 namespace UnityTexturePacker.Lib
 #else
 namespace TexturePacker.Lib
