@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Drawing;
 
+#if UNITY_TEAM_LICENSE
+namespace UnityTexturePacker.Lib
+#else
 namespace TexturePacker.Lib
+#endif
 {
     /// <summary>
     /// Minified Node (used to represent minimum quantity of information possible)

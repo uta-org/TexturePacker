@@ -43,13 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atlas.cs" />
-    <Compile Include="BestFitHeuristic.cs" />
+    <Compile Include="Enums\BestFitHeuristic.cs" />
     <Compile Include="IMinifiedNode.cs" />
     <Compile Include="MinifiedAtlas.cs" />
     <Compile Include="MinifiedNode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SplitType.cs" />
+    <Compile Include="Enums\SplitType.cs" />
     <Compile Include="TextureInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

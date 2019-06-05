@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Drawing;
 
+#if UNITY_TEAM_LICENSE
+namespace UnityTexturePacker.Lib
+#else
 namespace TexturePacker.Lib
+#endif
 {
     /// <summary>
     /// A node in the Atlas structure
