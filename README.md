@@ -1,4 +1,4 @@
-# TexturePacker
+# TexturePacker [![NuGet version (Texture Packer)](https://img.shields.io/nuget/v/TexturePacker.Lib.svg?style=flat-square)](https://www.nuget.org/packages/TexturePacker.Lib/)
 
 Requires .NET 4.6 and C# 7
 
