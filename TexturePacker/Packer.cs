@@ -41,7 +41,7 @@ namespace TexturePacker
         public int AtlasSize;
 
         /// <summary>
-        /// Toggle for debug mode, resulting in debug atlasses to check the packing algorithm
+        /// Toggle for debug mode, resulting in debug atlases to check the packing algorithm
         /// </summary>
         public bool DebugMode;
 
@@ -49,11 +49,6 @@ namespace TexturePacker
         /// Which heuristic to use when doing the fit
         /// </summary>
         public BestFitHeuristic FitHeuristic;
-
-        /// <summary>
-        /// List of all the output atlases
-        /// </summary>
-        public List<Atlas> Atlasses;
 
         public Packer()
         {
@@ -90,8 +85,8 @@ namespace TexturePacker
                     Console.WriteLine($"Atlas exceeded max size of 8192 pixels ({atlasSize})");
             }
 
-            //2: generate as many atlasses as needed (with the latest one as small as possible)
-            Atlasses = new List<Atlas>();
+            //2: generate as many atlases as needed (with the latest one as small as possible)
+            var atlases = new List<Atlas>();
             while (textures.Count > 0)
             {
                 Atlas atlas = new Atlas();
@@ -115,16 +110,16 @@ namespace TexturePacker
                     leftovers = LayoutAtlas(textures, atlas);
                 }
 
-                Atlasses.Add(atlas);
+                atlases.Add(atlas);
 
                 textures = leftovers;
             }
 
             if (_Save)
-                SaveAtlasses(_Type, _DebugMode, _OutName, sources);
+                SaveAtlases(_Type, _DebugMode, _OutName, sources, atlases);
         }
 
-        private void SaveAtlasses(OutputType _Type, bool _Debug, string _Destination, List<string> _Sources)
+        private void SaveAtlases(OutputType _Type, bool _Debug, string _Destination, List<string> _Sources, List<Atlas> _Atlases)
         {
             int atlasCount = 0;
             string prefix = Path.HasExtension(_Destination) ? Path.GetFileNameWithoutExtension(_Destination) : _Destination;
@@ -132,41 +127,45 @@ namespace TexturePacker
             StreamWriter tw = new StreamWriter(_Destination);
             tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
 
-            foreach (Atlas atlas in Atlasses)
-            {
-                string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
+            //foreach (Atlas atlas in Atlases)
 
-                //1: Save images
+            string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
+
+            //1: Save images
+            foreach (Atlas atlas in _Atlases)
+            {
                 Image img = CreateAtlasImage(atlas, _Sources);
                 img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
-
-                switch (_Type)
-                {
-                    case OutputType.TXT:
-                        OutputTXT(atlas, tw, atlasName);
-                        break;
-
-                    case OutputType.JSON:
-                    case OutputType.JMin:
-                    case OutputType.MinifiedJSON:
-                        OutputJson(atlasName, _Type != OutputType.JSON);
-                        break;
-
-                    case OutputType.CSV:
-                        throw new NotImplementedException();
-
-                    case OutputType.YAML:
-                        throw new NotImplementedException();
-
-                    case OutputType.HTML:
-                        throw new NotImplementedException();
-
-                    case OutputType.XML:
-                        throw new NotImplementedException();
-                }
-
-                ++atlasCount;
             }
+
+            switch (_Type)
+            {
+                case OutputType.TXT:
+                    // This have a problem
+                    OutputTXT(_Atlases, tw, atlasName);
+                    break;
+
+                case OutputType.JSON:
+                case OutputType.JMin:
+                case OutputType.MinifiedJSON:
+                    OutputJson(_Atlases, atlasName, _Type != OutputType.JSON);
+                    break;
+
+                case OutputType.CSV:
+                    throw new NotImplementedException();
+
+                case OutputType.YAML:
+                    throw new NotImplementedException();
+
+                case OutputType.HTML:
+                    throw new NotImplementedException();
+
+                case OutputType.XML:
+                    throw new NotImplementedException();
+            }
+
+            ++atlasCount;
+
             tw.Close();
 
             if (!_Debug)
@@ -180,33 +179,34 @@ namespace TexturePacker
             tw.Close();
         }
 
-        private void OutputJson(string _AtlasName, bool _Minified)
+        private void OutputJson(List<Atlas> _Atlases, string _AtlasName, bool _Minified)
         {
-            var atlasBlock = new AtlasBlock(Atlasses);
+            var atlasBlock = new AtlasBlock(_Atlases);
 
             string folderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string filePath = Path.Combine(folderPath ?? throw new InvalidOperationException(), $"{_AtlasName}{(_Minified ? ".min" : string.Empty)}.json");
+            string filePath = Path.Combine(folderPath ?? throw new InvalidOperationException(), $"{Path.GetFileNameWithoutExtension(_AtlasName)}{(_Minified ? ".min" : string.Empty)}.json");
 
             File.WriteAllText(filePath, JsonConvert.SerializeObject(atlasBlock, _Minified ? Formatting.None : Formatting.Indented));
         }
 
-        private static void OutputTXT(Atlas _Atlas, StreamWriter _TextWriter, string _AtlasName)
+        private static void OutputTXT(List<Atlas> _Atlases, StreamWriter _TextWriter, string _AtlasName)
         {
-            // TODO: Implement Atlasses
+            // TODO: Create one txt file only
 
             //2: save description in file
-            foreach (Node n in _Atlas.Nodes)
-            {
-                if (n.Texture != null)
+            foreach (Atlas atlas in _Atlases)
+                foreach (Node n in atlas.Nodes)
                 {
-                    _TextWriter.Write(n.Texture.Source + ", ");
-                    _TextWriter.Write(_AtlasName + ", ");
-                    _TextWriter.Write((float)n.Bounds.X / _Atlas.Width + ", ");
-                    _TextWriter.Write((float)n.Bounds.Y / _Atlas.Height + ", ");
-                    _TextWriter.Write((float)n.Bounds.Width / _Atlas.Width + ", ");
-                    _TextWriter.WriteLine(((float)n.Bounds.Height / _Atlas.Height).ToString(CultureInfo.InvariantCulture));
+                    if (n.Texture != null)
+                    {
+                        _TextWriter.Write(n.Texture.Source + ", ");
+                        _TextWriter.Write(_AtlasName + ", ");
+                        _TextWriter.Write((float)n.Bounds.X / atlas.Width + ", ");
+                        _TextWriter.Write((float)n.Bounds.Y / atlas.Height + ", ");
+                        _TextWriter.Write((float)n.Bounds.Width / atlas.Width + ", ");
+                        _TextWriter.WriteLine(((float)n.Bounds.Height / atlas.Height).ToString(CultureInfo.InvariantCulture));
+                    }
                 }
-            }
         }
 
         private void ScanForTextures(string _Path, string _Wildcard, bool _FullPath, out List<string> _Sources)
