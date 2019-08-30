@@ -81,7 +81,7 @@ namespace TexturePacker
                         if (!prms[ip + 1].StartsWith("-"))
                         {
                             string rawType = prms[ip + 1];
-                            type = (OutputType)Enum.Parse(typeof(OutputType), rawType);
+                            type = (OutputType)Enum.Parse(typeof(OutputType), rawType, true);
                             ++ip;
                         }
                         break;
