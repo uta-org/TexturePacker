@@ -69,7 +69,7 @@ namespace TexturePacker
             DebugMode = _DebugMode;
 
             //1: scan for all the textures we need to pack
-            ScanForTextures(_SourceDir, _Pattern, _FullPath);
+            ScanForTextures(_SourceDir, _Pattern, _FullPath, out var sources);
 
             List<TextureInfo> textures = new List<TextureInfo>();
             textures = SourceTextures.ToList();
@@ -121,10 +121,10 @@ namespace TexturePacker
             }
 
             if (_Save)
-                SaveAtlasses(_Type, _DebugMode, _OutName);
+                SaveAtlasses(_Type, _DebugMode, _OutName, sources);
         }
 
-        private void SaveAtlasses(OutputType _Type, bool _Debug, string _Destination)
+        private void SaveAtlasses(OutputType _Type, bool _Debug, string _Destination, List<string> _Sources)
         {
             int atlasCount = 0;
             string prefix = Path.HasExtension(_Destination) ? Path.GetFileNameWithoutExtension(_Destination) : _Destination;
@@ -137,7 +137,7 @@ namespace TexturePacker
                 string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
 
                 //1: Save images
-                Image img = CreateAtlasImage(atlas);
+                Image img = CreateAtlasImage(atlas, _Sources);
                 img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
 
                 switch (_Type)
@@ -209,10 +209,11 @@ namespace TexturePacker
             }
         }
 
-        private void ScanForTextures(string _Path, string _Wildcard, bool _FullPath)
+        private void ScanForTextures(string _Path, string _Wildcard, bool _FullPath, out List<string> _Sources)
         {
             DirectoryInfo di = new DirectoryInfo(_Path);
             FileInfo[] files = di.GetFiles(_Wildcard, SearchOption.AllDirectories);
+            _Sources = new List<string>();
 
             foreach (FileInfo fi in files)
             {
@@ -220,6 +221,9 @@ namespace TexturePacker
                 if (img.Width <= AtlasSize && img.Height <= AtlasSize)
                 {
                     TextureInfo ti = new TextureInfo();
+
+                    if (!_FullPath)
+                        _Sources.Add(fi.FullName);
 
                     ti.Source = _FullPath ? fi.FullName : Path.GetFileNameWithoutExtension(fi.Name);
                     ti.Width = img.Width;
@@ -371,7 +375,7 @@ namespace TexturePacker
             return textures;
         }
 
-        private Image CreateAtlasImage(Atlas _Atlas)
+        private Image CreateAtlasImage(Atlas _Atlas, List<string> _Sources)
         {
             Image img = new Bitmap(_Atlas.Width, _Atlas.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(img);
@@ -381,31 +385,36 @@ namespace TexturePacker
                 g.FillRectangle(Brushes.Green, new Rectangle(0, 0, _Atlas.Width, _Atlas.Height));
             }
 
-            foreach (Node n in _Atlas.Nodes)
+            for (var index = 0; index < _Atlas.Nodes.Count; index++)
             {
-                if (n.Texture != null)
+                Node node = _Atlas.Nodes[index];
+                string source = _Sources?[index];
+
+                if (node.Texture != null)
                 {
-                    Image sourceImg = Image.FromFile(n.Texture.Source);
-                    g.DrawImage(sourceImg, n.Bounds);
+                    Image sourceImg = Image.FromFile(source ?? node.Texture.Source);
+                    g.DrawImage(sourceImg, node.Bounds);
 
                     if (DebugMode)
                     {
-                        string label = Path.GetFileNameWithoutExtension(n.Texture.Source);
-                        SizeF labelBox = g.MeasureString(label, SystemFonts.MenuFont, new SizeF(n.Bounds.Size));
-                        RectangleF rectBounds = new Rectangle(n.Bounds.Location, new Size((int)labelBox.Width, (int)labelBox.Height));
+                        string label = Path.GetFileNameWithoutExtension(node.Texture.Source);
+                        SizeF labelBox = g.MeasureString(label, SystemFonts.MenuFont, new SizeF(node.Bounds.Size));
+                        RectangleF rectBounds = new Rectangle(node.Bounds.Location,
+                            new Size((int)labelBox.Width, (int)labelBox.Height));
                         g.FillRectangle(Brushes.Black, rectBounds);
                         g.DrawString(label, SystemFonts.MenuFont, Brushes.White, rectBounds);
                     }
                 }
                 else
                 {
-                    g.FillRectangle(Brushes.DarkMagenta, n.Bounds);
+                    g.FillRectangle(Brushes.DarkMagenta, node.Bounds);
 
                     if (DebugMode)
                     {
-                        string label = n.Bounds.Width + "x" + n.Bounds.Height;
-                        SizeF labelBox = g.MeasureString(label, SystemFonts.MenuFont, new SizeF(n.Bounds.Size));
-                        RectangleF rectBounds = new Rectangle(n.Bounds.Location, new Size((int)labelBox.Width, (int)labelBox.Height));
+                        string label = node.Bounds.Width + "x" + node.Bounds.Height;
+                        SizeF labelBox = g.MeasureString(label, SystemFonts.MenuFont, new SizeF(node.Bounds.Size));
+                        RectangleF rectBounds = new Rectangle(node.Bounds.Location,
+                            new Size((int)labelBox.Width, (int)labelBox.Height));
                         g.FillRectangle(Brushes.Black, rectBounds);
                         g.DrawString(label, SystemFonts.MenuFont, Brushes.White, rectBounds);
                     }
