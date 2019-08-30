@@ -61,7 +61,7 @@ namespace TexturePacker
             Error = new StringWriter();
         }
 
-        public void Process(string _SourceDir, string _Pattern, int _AtlasSize, int _Padding, bool _DebugMode)
+        public void Process(bool safeMode, string _SourceDir, string _Pattern, int _AtlasSize, int _Padding, bool _DebugMode)
         {
             Padding = _Padding;
             AtlasSize = _AtlasSize;
@@ -73,7 +73,7 @@ namespace TexturePacker
             List<TextureInfo> textures = new List<TextureInfo>();
             textures = SourceTextures.ToList();
 
-            bool areIcons = textures.All(tex => tex.Width == tex.Height)
+            bool areIcons = !safeMode || textures.All(tex => tex.Width == tex.Height)
                             && (int)textures.Average(tex => tex.Width * tex.Height) == textures[0].Width * textures[1].Height;
 
             if (AtlasSize == 1024 && areIcons)

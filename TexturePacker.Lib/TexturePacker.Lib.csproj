@@ -45,15 +45,21 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Drawing" Condition="$(DefineConstants.Contains('UNITY')) == 'False'" />
+    <Reference Include="TexturePacker.Lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TexturePacker.Lib.1.0.1\lib\net461\Release\TexturePacker.Lib.dll</HintPath>
+    </Reference>
+    <Reference Include="TexturePacker.Lib.UnityEditor.Debug, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TexturePacker.Lib.1.0.1\lib\net461\ForUnity\Editor\Debug\TexturePacker.Lib.UnityEditor.Debug.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TexturePacker.Lib.UnityEditor.Release, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TexturePacker.Lib.1.0.1\lib\net461\ForUnity\Editor\Release\TexturePacker.Lib.UnityEditor.Release.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atlas.cs" />
     <Compile Include="Enums\BestFitHeuristic.cs" />
-    <Compile Include="ForUnity\Point.cs" />
-    <Compile Include="ForUnity\PointF.cs" />
-    <Compile Include="ForUnity\Rectangle.cs" />
-    <Compile Include="ForUnity\Size.cs" />
-    <Compile Include="ForUnity\SizeF.cs" />
     <Compile Include="IMinifiedNode.cs" />
     <Compile Include="MinifiedAtlas.cs" />
     <Compile Include="MinifiedNode.cs" />

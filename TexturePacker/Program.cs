@@ -14,6 +14,7 @@ namespace TexturePacker
             Console.WriteLine("            -o  | --output     : name of the atlas file to generate");
             Console.WriteLine("            -s  | --size       : size of 1 side of the atlas file in pixels. Default = 1024");
             Console.WriteLine("            -b  | --border     : nb of pixels between textures in the atlas. Default = 0");
+            Console.WriteLine("            -sm | --safemode   : ensure that textures have the same dimensions.");
             Console.WriteLine("            -d  | --debug      : output debug info in the atlas");
             Console.WriteLine("  ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug");
         }
@@ -35,6 +36,7 @@ namespace TexturePacker
             string outName = "";
             int textureSize = 1024;
             int border = 0;
+            bool safeMode = false;
             bool debug = false;
 
             for (int ip = 0; ip < prms.Count; ++ip)
@@ -88,6 +90,11 @@ namespace TexturePacker
                         }
                         break;
 
+                    case "-sm":
+                    case "--safemode":
+                        safeMode = true;
+                        break;
+
                     case "-d":
                     case "--debug":
                         debug = true;
@@ -107,7 +114,7 @@ namespace TexturePacker
 
             Packer packer = new Packer();
 
-            packer.Process(sourcePath, searchPattern, textureSize, border, debug);
+            packer.Process(safeMode, sourcePath, searchPattern, textureSize, border, debug);
             packer.SaveAtlasses(outName);
             packer.SerializeAtlasses();
         }
