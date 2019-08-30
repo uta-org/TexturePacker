@@ -18,7 +18,7 @@ namespace TexturePacker
             Console.WriteLine("            -sm | --safemode   : ensure that textures have the same dimensions.");
             Console.WriteLine("            -fp | --fullpath   : output full paths in json files.");
             Console.WriteLine("            -d  | --debug      : output debug info in the atlas");
-            Console.WriteLine("  ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug");
+            Console.WriteLine("  ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -f C:\\Temp\atlas.txt -o jmin -s 512 -b 2 --safemode -fullpath --debug");
         }
 
         private static void Main(string[] args)
@@ -78,7 +78,12 @@ namespace TexturePacker
 
                     case "-o":
                     case "--output":
-
+                        if (!prms[ip + 1].StartsWith("-"))
+                        {
+                            string rawType = prms[ip + 1];
+                            type = (OutputType)Enum.Parse(typeof(OutputType), rawType);
+                            ++ip;
+                        }
                         break;
 
                     case "-s":
