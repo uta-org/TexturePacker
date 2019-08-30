@@ -127,7 +127,7 @@ namespace TexturePacker
         private void SaveAtlasses(OutputType _Type, bool _Debug, string _Destination)
         {
             int atlasCount = 0;
-            string prefix = _Destination.Replace(Path.GetExtension(_Destination), "");
+            string prefix = Path.HasExtension(_Destination) ? Path.GetFileNameWithoutExtension(_Destination) : _Destination;
 
             StreamWriter tw = new StreamWriter(_Destination);
             tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
