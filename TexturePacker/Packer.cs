@@ -124,31 +124,27 @@ namespace TexturePacker
             int atlasCount = 0;
             string prefix = Path.HasExtension(_Destination) ? Path.GetFileNameWithoutExtension(_Destination) : _Destination;
 
-            StreamWriter tw = new StreamWriter(_Destination);
-            tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
-
-            //foreach (Atlas atlas in Atlases)
-
-            string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
-
             //1: Save images
             foreach (Atlas atlas in _Atlases)
             {
-                Image img = CreateAtlasImage(atlas, _Sources);
-                img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
+                string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
+
+                using (var img = CreateAtlasImage(atlas, _Sources))
+                    img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
+
+                ++atlasCount;
             }
 
             switch (_Type)
             {
                 case OutputType.TXT:
-                    // This have a problem
-                    OutputTXT(_Atlases, tw, atlasName);
+                    OutputTXT(_Atlases, prefix);
                     break;
 
                 case OutputType.JSON:
                 case OutputType.JMin:
                 case OutputType.MinifiedJSON:
-                    OutputJson(_Atlases, atlasName, _Type != OutputType.JSON);
+                    OutputJson(_Atlases, prefix, _Type != OutputType.JSON);
                     break;
 
                 case OutputType.CSV:
@@ -164,14 +160,10 @@ namespace TexturePacker
                     throw new NotImplementedException();
             }
 
-            ++atlasCount;
-
-            tw.Close();
-
             if (!_Debug)
                 return;
 
-            tw = new StreamWriter(prefix + ".log");
+            var tw = new StreamWriter(prefix + ".log");
             tw.WriteLine("--- LOG -------------------------------------------");
             tw.WriteLine(Log.ToString());
             tw.WriteLine("--- ERROR -----------------------------------------");
@@ -189,24 +181,31 @@ namespace TexturePacker
             File.WriteAllText(filePath, JsonConvert.SerializeObject(atlasBlock, _Minified ? Formatting.None : Formatting.Indented));
         }
 
-        private static void OutputTXT(List<Atlas> _Atlases, StreamWriter _TextWriter, string _AtlasName)
+        private static void OutputTXT(List<Atlas> _Atlases, string _AtlasName)
         {
             // TODO: Create one txt file only
 
-            //2: save description in file
-            foreach (Atlas atlas in _Atlases)
-                foreach (Node n in atlas.Nodes)
-                {
-                    if (n.Texture != null)
+            string filePath = !Path.HasExtension(_AtlasName) ? $"{_AtlasName}.txt" : _AtlasName;
+
+            using (var tw = new StreamWriter(filePath))
+            {
+                tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
+
+                //2: save description in file
+                foreach (Atlas atlas in _Atlases)
+                    foreach (Node node in atlas.Nodes)
                     {
-                        _TextWriter.Write(n.Texture.Source + ", ");
-                        _TextWriter.Write(_AtlasName + ", ");
-                        _TextWriter.Write((float)n.Bounds.X / atlas.Width + ", ");
-                        _TextWriter.Write((float)n.Bounds.Y / atlas.Height + ", ");
-                        _TextWriter.Write((float)n.Bounds.Width / atlas.Width + ", ");
-                        _TextWriter.WriteLine(((float)n.Bounds.Height / atlas.Height).ToString(CultureInfo.InvariantCulture));
+                        if (node.Texture != null)
+                        {
+                            tw.Write(node.Texture.Source + ", ");
+                            tw.Write(_AtlasName + ", ");
+                            tw.Write((float)node.Bounds.X / atlas.Width + ", ");
+                            tw.Write((float)node.Bounds.Y / atlas.Height + ", ");
+                            tw.Write((float)node.Bounds.Width / atlas.Width + ", ");
+                            tw.WriteLine(((float)node.Bounds.Height / atlas.Height).ToString(CultureInfo.InvariantCulture));
+                        }
                     }
-                }
+            }
         }
 
         private void ScanForTextures(string _Path, string _Wildcard, bool _FullPath, out List<string> _Sources)
