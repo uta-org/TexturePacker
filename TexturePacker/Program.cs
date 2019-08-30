@@ -11,10 +11,12 @@ namespace TexturePacker
             Console.WriteLine("  usage: TexturePacker -sp xxx -ft xxx -o xxx [-s xxx] [-b x] [-d]");
             Console.WriteLine("            -sp | --sourcepath : folder to recursively scan for textures to pack");
             Console.WriteLine("            -ft | --filetype   : types of textures to pack (*.png only for now)");
-            Console.WriteLine("            -o  | --output     : name of the atlas file to generate");
+            Console.WriteLine("            -f  | --filename   : name of the atlas file to generate");
+            Console.WriteLine("            -o  | --output     : specify different type of output (TXT, JSON, XML, YAML, CSV, HTML...) [non case sensitive]");
             Console.WriteLine("            -s  | --size       : size of 1 side of the atlas file in pixels. Default = 1024");
             Console.WriteLine("            -b  | --border     : nb of pixels between textures in the atlas. Default = 0");
             Console.WriteLine("            -sm | --safemode   : ensure that textures have the same dimensions.");
+            Console.WriteLine("            -fp | --fullpath   : output full paths in json files.");
             Console.WriteLine("            -d  | --debug      : output debug info in the atlas");
             Console.WriteLine("  ex: TexturePacker -sp C:\\Temp\\Textures -ft *.png -o C:\\Temp\atlas.txt -s 512 -b 2 --debug");
         }
@@ -34,9 +36,11 @@ namespace TexturePacker
             string sourcePath = "";
             string searchPattern = "";
             string outName = "";
+            OutputType type = default;
             int textureSize = 1024;
             int border = 0;
             bool safeMode = false;
+            bool fullPath = false;
             bool debug = false;
 
             for (int ip = 0; ip < prms.Count; ++ip)
@@ -63,13 +67,18 @@ namespace TexturePacker
                         }
                         break;
 
-                    case "-o":
-                    case "--output":
+                    case "-f":
+                    case "--filename":
                         if (!prms[ip + 1].StartsWith("-"))
                         {
                             outName = prms[ip + 1];
                             ++ip;
                         }
+                        break;
+
+                    case "-o":
+                    case "--output":
+
                         break;
 
                     case "-s":
@@ -95,6 +104,11 @@ namespace TexturePacker
                         safeMode = true;
                         break;
 
+                    case "-fp":
+                    case "--fullpath":
+                        fullPath = true;
+                        break;
+
                     case "-d":
                     case "--debug":
                         debug = true;
@@ -114,9 +128,7 @@ namespace TexturePacker
 
             Packer packer = new Packer();
 
-            packer.Process(safeMode, sourcePath, searchPattern, textureSize, border, debug);
-            packer.SaveAtlasses(outName);
-            packer.SerializeAtlasses();
+            packer.Process(type, outName, sourcePath, searchPattern, textureSize, border, debug, safeMode, fullPath);
         }
     }
 }

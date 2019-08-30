@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -61,19 +62,19 @@ namespace TexturePacker
             Error = new StringWriter();
         }
 
-        public void Process(bool safeMode, string _SourceDir, string _Pattern, int _AtlasSize, int _Padding, bool _DebugMode)
+        public void Process(OutputType _Type, string _OutName, string _SourceDir, string _Pattern, int _AtlasSize, int _Padding, bool _DebugMode, bool _SafeMode, bool _FullPath, bool _Save = true)
         {
             Padding = _Padding;
             AtlasSize = _AtlasSize;
             DebugMode = _DebugMode;
 
             //1: scan for all the textures we need to pack
-            ScanForTextures(_SourceDir, _Pattern);
+            ScanForTextures(_SourceDir, _Pattern, _FullPath);
 
             List<TextureInfo> textures = new List<TextureInfo>();
             textures = SourceTextures.ToList();
 
-            bool areIcons = !safeMode || textures.All(tex => tex.Width == tex.Height)
+            bool areIcons = !_SafeMode || textures.All(tex => tex.Width == tex.Height)
                             && (int)textures.Average(tex => tex.Width * tex.Height) == textures[0].Width * textures[1].Height;
 
             if (AtlasSize == 1024 && areIcons)
@@ -118,42 +119,58 @@ namespace TexturePacker
 
                 textures = leftovers;
             }
+
+            if (_Save)
+                SaveAtlasses(_Type, _DebugMode, _OutName);
         }
 
-        public void SaveAtlasses(string _Destination)
+        private void SaveAtlasses(OutputType _Type, bool _Debug, string _Destination)
         {
             int atlasCount = 0;
             string prefix = _Destination.Replace(Path.GetExtension(_Destination), "");
 
-            string descFile = _Destination;
             StreamWriter tw = new StreamWriter(_Destination);
             tw.WriteLine("source_tex, atlas_tex, u, v, scale_u, scale_v");
 
             foreach (Atlas atlas in Atlasses)
             {
-                string atlasName = String.Format(prefix + "{0:000}" + ".png", atlasCount);
+                string atlasName = string.Format(prefix + "{0:000}" + ".png", atlasCount);
 
                 //1: Save images
                 Image img = CreateAtlasImage(atlas);
                 img.Save(atlasName, System.Drawing.Imaging.ImageFormat.Png);
 
-                //2: save description in file
-                foreach (Node n in atlas.Nodes)
+                switch (_Type)
                 {
-                    if (n.Texture != null)
-                    {
-                        tw.Write(n.Texture.Source + ", ");
-                        tw.Write(atlasName + ", ");
-                        tw.Write(((float)n.Bounds.X / atlas.Width).ToString() + ", ");
-                        tw.Write(((float)n.Bounds.Y / atlas.Height).ToString() + ", ");
-                        tw.Write(((float)n.Bounds.Width / atlas.Width).ToString() + ", ");
-                        tw.WriteLine(((float)n.Bounds.Height / atlas.Height).ToString());
-                    }
+                    case OutputType.TXT:
+                        OutputTXT(atlas, tw, atlasName);
+                        break;
+
+                    case OutputType.JSON:
+                    case OutputType.JMin:
+                    case OutputType.MinifiedJSON:
+                        OutputJson(atlasName, _Type != OutputType.JSON);
+                        break;
+
+                    case OutputType.CSV:
+                        throw new NotImplementedException();
+
+                    case OutputType.YAML:
+                        throw new NotImplementedException();
+
+                    case OutputType.HTML:
+                        throw new NotImplementedException();
+
+                    case OutputType.XML:
+                        throw new NotImplementedException();
                 }
 
                 ++atlasCount;
             }
             tw.Close();
+
+            if (!_Debug)
+                return;
 
             tw = new StreamWriter(prefix + ".log");
             tw.WriteLine("--- LOG -------------------------------------------");
@@ -163,24 +180,36 @@ namespace TexturePacker
             tw.Close();
         }
 
-        public void SerializeAtlasses()
+        private void OutputJson(string _AtlasName, bool _Minified)
         {
+            var atlasBlock = new AtlasBlock(Atlasses);
+
             string folderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string filePath = Path.Combine(folderPath ?? throw new InvalidOperationException(), $"{_AtlasName}{(_Minified ? ".min" : string.Empty)}.json");
 
-            int counter = 0;
-            foreach (var atlas in Atlasses)
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(atlasBlock, _Minified ? Formatting.None : Formatting.Indented));
+        }
+
+        private static void OutputTXT(Atlas _Atlas, StreamWriter _TextWriter, string _AtlasName)
+        {
+            // TODO: Implement Atlasses
+
+            //2: save description in file
+            foreach (Node n in _Atlas.Nodes)
             {
-                string filePath = Path.Combine(folderPath, $"atlas-{counter}.json");
-                string filePathMin = Path.Combine(folderPath, $"atlas-{counter}.min.json");
-
-                File.WriteAllText(filePath, JsonConvert.SerializeObject(atlas, Formatting.Indented));
-                File.WriteAllText(filePathMin, JsonConvert.SerializeObject((MinifiedAtlas<MinifiedNode>)atlas));
-
-                ++counter;
+                if (n.Texture != null)
+                {
+                    _TextWriter.Write(n.Texture.Source + ", ");
+                    _TextWriter.Write(_AtlasName + ", ");
+                    _TextWriter.Write((float)n.Bounds.X / _Atlas.Width + ", ");
+                    _TextWriter.Write((float)n.Bounds.Y / _Atlas.Height + ", ");
+                    _TextWriter.Write((float)n.Bounds.Width / _Atlas.Width + ", ");
+                    _TextWriter.WriteLine(((float)n.Bounds.Height / _Atlas.Height).ToString(CultureInfo.InvariantCulture));
+                }
             }
         }
 
-        private void ScanForTextures(string _Path, string _Wildcard)
+        private void ScanForTextures(string _Path, string _Wildcard, bool _FullPath)
         {
             DirectoryInfo di = new DirectoryInfo(_Path);
             FileInfo[] files = di.GetFiles(_Wildcard, SearchOption.AllDirectories);
@@ -188,24 +217,21 @@ namespace TexturePacker
             foreach (FileInfo fi in files)
             {
                 Image img = Image.FromFile(fi.FullName);
-                if (img != null)
+                if (img.Width <= AtlasSize && img.Height <= AtlasSize)
                 {
-                    if (img.Width <= AtlasSize && img.Height <= AtlasSize)
-                    {
-                        TextureInfo ti = new TextureInfo();
+                    TextureInfo ti = new TextureInfo();
 
-                        ti.Source = fi.FullName;
-                        ti.Width = img.Width;
-                        ti.Height = img.Height;
+                    ti.Source = _FullPath ? fi.FullName : Path.GetFileNameWithoutExtension(fi.Name);
+                    ti.Width = img.Width;
+                    ti.Height = img.Height;
 
-                        SourceTextures.Add(ti);
+                    SourceTextures.Add(ti);
 
-                        Log.WriteLine("Added " + fi.FullName);
-                    }
-                    else
-                    {
-                        Error.WriteLine(fi.FullName + " is too large to fix in the atlas. Skipping!");
-                    }
+                    Log.WriteLine("Added " + fi.FullName);
+                }
+                else
+                {
+                    Error.WriteLine(fi.FullName + " is too large to fix in the atlas. Skipping!");
                 }
             }
         }
@@ -377,7 +403,7 @@ namespace TexturePacker
 
                     if (DebugMode)
                     {
-                        string label = n.Bounds.Width.ToString() + "x" + n.Bounds.Height.ToString();
+                        string label = n.Bounds.Width + "x" + n.Bounds.Height;
                         SizeF labelBox = g.MeasureString(label, SystemFonts.MenuFont, new SizeF(n.Bounds.Size));
                         RectangleF rectBounds = new Rectangle(n.Bounds.Location, new Size((int)labelBox.Width, (int)labelBox.Height));
                         g.FillRectangle(Brushes.Black, rectBounds);
