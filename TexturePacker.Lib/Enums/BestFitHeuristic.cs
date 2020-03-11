@@ -1,9 +1,4 @@
-﻿#if UNITY
-namespace UnityTexturePacker.Lib
-#else
-
-namespace TexturePacker.Lib
-#endif
+﻿namespace _TexturePacker.Lib
 {
     /// <summary>
     /// Different types of heuristics in how to use the available space

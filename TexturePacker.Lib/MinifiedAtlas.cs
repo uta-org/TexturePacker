@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-#if UNITY
-namespace UnityTexturePacker.Lib
-#else
-namespace TexturePacker.Lib
-#endif
+namespace _TexturePacker.Lib
 {
     /// <summary>
     /// Minified Atlas class

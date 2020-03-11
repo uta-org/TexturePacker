@@ -1,4 +1,4 @@
-﻿namespace TexturePacker
+﻿namespace _TexturePacker
 {
     public enum OutputType
     {

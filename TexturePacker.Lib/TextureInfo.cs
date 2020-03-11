@@ -1,10 +1,6 @@
 ﻿using System;
 
-#if UNITY
-namespace UnityTexturePacker.Lib
-#else
-namespace TexturePacker.Lib
-#endif
+namespace _TexturePacker.Lib
 {
     /// <summary>
     /// Represents a Texture in an atlas

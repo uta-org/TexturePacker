@@ -1,14 +1,19 @@
-﻿using System;
+﻿#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
+
+using Newtonsoft.Json;
+
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
-using TexturePacker.Lib;
+using _TexturePacker.Lib;
 
-namespace TexturePacker
+namespace _TexturePacker
 {
     /// <summary>
     /// Objects that performs the packing task. Takes a list of textures as input and generates a set of atlas textures/definition pairs
@@ -144,7 +149,9 @@ namespace TexturePacker
                 case OutputType.JSON:
                 case OutputType.JMin:
                 case OutputType.MinifiedJSON:
+#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
                     OutputJson(_Atlases, prefix, _Type != OutputType.JSON);
+#endif
                     break;
 
                 case OutputType.CSV:
@@ -171,6 +178,8 @@ namespace TexturePacker
             tw.Close();
         }
 
+#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
+
         private void OutputJson(List<Atlas> _Atlases, string _AtlasName, bool _Minified)
         {
             var atlasBlock = new AtlasBlock(_Atlases);
@@ -180,6 +189,8 @@ namespace TexturePacker
 
             File.WriteAllText(filePath, JsonConvert.SerializeObject(atlasBlock, _Minified ? Formatting.None : Formatting.Indented));
         }
+
+#endif
 
         private static void OutputTXT(List<Atlas> _Atlases, string _AtlasName)
         {

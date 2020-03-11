@@ -1,8 +1,4 @@
-﻿#if UNITY
-namespace UnityTexturePacker.Lib
-#else
-namespace TexturePacker.Lib
-#endif
+﻿namespace _TexturePacker.Lib
 {
     /// <summary>
     /// Indicates in which direction to split an unused area when it gets used

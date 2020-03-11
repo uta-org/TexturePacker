@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using TexturePacker.Lib;
+using _TexturePacker.Lib;
 
-namespace TexturePacker
+namespace _TexturePacker
 {
     public class AtlasBlock
     {
