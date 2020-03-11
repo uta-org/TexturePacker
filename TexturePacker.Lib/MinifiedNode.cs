@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using _TexturePacker.Lib.Interfaces;
 
 namespace _TexturePacker.Lib
 {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace _TexturePacker.Lib
+namespace _TexturePacker.Lib.Interfaces
 {
     public interface IMinifiedNode
     {

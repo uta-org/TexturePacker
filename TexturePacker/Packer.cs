@@ -15,6 +15,8 @@ using _TexturePacker.Lib;
 
 namespace _TexturePacker
 {
+#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
+
     /// <summary>
     /// Objects that performs the packing task. Takes a list of textures as input and generates a set of atlas textures/definition pairs
     /// </summary>
@@ -149,9 +151,7 @@ namespace _TexturePacker
                 case OutputType.JSON:
                 case OutputType.JMin:
                 case OutputType.MinifiedJSON:
-#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
                     OutputJson(_Atlases, prefix, _Type != OutputType.JSON);
-#endif
                     break;
 
                 case OutputType.CSV:
@@ -178,8 +178,6 @@ namespace _TexturePacker
             tw.Close();
         }
 
-#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
-
         private void OutputJson(List<Atlas> _Atlases, string _AtlasName, bool _Minified)
         {
             var atlasBlock = new AtlasBlock(_Atlases);
@@ -189,8 +187,6 @@ namespace _TexturePacker
 
             File.WriteAllText(filePath, JsonConvert.SerializeObject(atlasBlock, _Minified ? Formatting.None : Formatting.Indented));
         }
-
-#endif
 
         private static void OutputTXT(List<Atlas> _Atlases, string _AtlasName)
         {
@@ -434,4 +430,245 @@ namespace _TexturePacker
             return img;
         }
     }
+
+#else
+
+    /// <summary>
+    ///     The Packer class
+    /// </summary>
+    public class Packer
+    {
+        /// <summary>
+        ///     The atlas
+        /// </summary>
+        private MinifiedAtlas<UnityMinifiedNode> m_atlas;
+
+        /// <summary>
+        ///     The dictionary
+        /// </summary>
+        private Dictionary<string, Rect> m_dict;
+
+        /// <summary>
+        ///     The loaded textures
+        /// </summary>
+        private readonly Dictionary<string, Texture2D> m_loadedTextures;
+
+        /// <summary>
+        ///     The mono
+        /// </summary>
+        private readonly MonoBehaviour m_mono;
+
+        /// <summary>
+        ///     The resource path
+        /// </summary>
+        private readonly string m_resourcePath;
+
+        /// <summary>
+        ///     Prevents a default instance of the <see cref="Packer" /> class from being created.
+        /// </summary>
+        private Packer()
+        {
+            m_dict = new Dictionary<string, Rect>();
+            m_loadedTextures = new Dictionary<string, Texture2D>();
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Packer" /> class.
+        /// </summary>
+        /// <param name="folder">The folder.</param>
+        /// <param name="monoBehaviour">The mono behaviour.</param>
+        /// <param name="callback">The callback.</param>
+        public Packer(string folder, MonoBehaviour monoBehaviour, Action callback = null)
+            : this()
+        {
+            m_mono = monoBehaviour;
+            m_resourcePath = folder;
+
+            m_mono.StartCoroutine(LoadAtlas(callback));
+        }
+
+        /// <summary>
+        ///     Gets the atlas.
+        /// </summary>
+        /// <value>
+        ///     The atlas.
+        /// </value>
+        public Texture2D Atlas { get; private set; }
+
+        /// <summary>
+        ///     Loads the atlas.
+        /// </summary>
+        /// <param name="callback">The callback.</param>
+        /// <returns></returns>
+        private IEnumerator LoadAtlas(Action callback)
+        {
+            string json;
+
+            var textRequest = Resources.LoadAsync<TextAsset>($"{m_resourcePath}/atlas");
+            var textureRequest = Resources.LoadAsync<Texture2D>($"{m_resourcePath}/atlas");
+
+            yield return new WaitUntil(() => textRequest.isDone && textureRequest.isDone);
+
+            json = (textRequest.asset as TextAsset).text;
+            m_atlas = JsonConvert.DeserializeObject<MinifiedAtlas<UnityMinifiedNode>>(json);
+
+            Atlas = textureRequest.asset as Texture2D;
+
+            //m_dict = m_atlas.Nodes.ToDictionary(t => t.Name,
+            //            t => t.Rectangle);
+
+            m_dict = new Dictionary<string, Rect>();
+
+            // Fixed: Checking for items with the same key
+            foreach (var node in m_atlas.Nodes)
+                if (!m_dict.ContainsKey(node.Name))
+                    m_dict.Add(node.Name, node.Rectangle);
+            //else
+            //    Debug.LogError($"Item '{node.Name}' with the same key already added!");
+
+            callback?.Invoke();
+        }
+
+        /// <summary>
+        ///     Gets the texture.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public Texture2D GetTexture(string name)
+        {
+            if (m_loadedTextures.ContainsKey(name))
+                return m_loadedTextures[name];
+
+            var texture = GetSprite(name).GetTexture();
+            m_loadedTextures.Add(name, texture);
+
+            //Debug.Log($"[Tex={texture.name}, Width={texture.width}, Height={texture.height}]");
+
+            return texture;
+        }
+
+        /// <summary>
+        ///     Gets the sprite.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public Sprite GetSprite(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                Debug.LogException(new ArgumentNullException(nameof(name)));
+                return null;
+            }
+
+            if (m_dict.Count == 0)
+            {
+                Debug.LogError("Internal dictionary is null!");
+                return null;
+            }
+
+            if (!ExistsOnInternalDictionary(name))
+            {
+                Debug.LogError($"Internal dictionary doesn't contains any value for '{name}'!");
+                return null;
+            }
+
+            var rect = m_dict[name];
+
+            var sprite = Sprite.Create(Atlas, rect, Vector2.one * .5f);
+            sprite.name = name;
+
+            return sprite;
+        }
+
+        /// <summary>
+        ///     Exists on internal dictionary?
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public bool ExistsOnInternalDictionary(string name)
+        {
+            return m_dict.ContainsKey(name);
+        }
+
+        /// <summary>
+        ///     Loads the icons.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Texture2D> LoadIcons()
+        {
+            return Atlas.GetTextures(m_atlas.Nodes.ToArray());
+        }
+
+        /// <summary>
+        ///     Loads the icons.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns></returns>
+        public IEnumerable<Texture2D> LoadIcons(int count)
+        {
+            var nodes = m_atlas.Nodes.Take(count).ToArray();
+            return Atlas.GetTextures(nodes);
+        }
+
+        /// <summary>
+        ///     Loads the icons.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">predicate</exception>
+        public IEnumerable<Texture2D> LoadIcons(int count, Func<Rect, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            var nodes = new List<UnityMinifiedNode>();
+
+            var i = 0;
+            foreach (var kv in m_dict)
+            {
+                if (predicate(kv.Value))
+                {
+                    nodes.Add(m_atlas.Nodes.Find(node => node.Name == kv.Key));
+                    ++i;
+                }
+
+                if (i > count - 1)
+                    break;
+            }
+
+            return Atlas.GetTextures(nodes.ToArray());
+        }
+
+        /// <summary>
+        ///     Loads the icons.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">predicate</exception>
+        public IEnumerable<Texture2D> LoadIcons(int count, Func<KeyValuePair<string, Rect>, bool> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            var nodes = new List<UnityMinifiedNode>();
+
+            var i = 0;
+            foreach (var kv in m_dict)
+            {
+                if (predicate(kv))
+                {
+                    nodes.Add(m_atlas.Nodes.Find(node => node.Name == kv.Key));
+                    ++i;
+                }
+
+                if (i > count - 1)
+                    break;
+            }
+
+            return Atlas.GetTextures(nodes.ToArray());
+        }
+    }
+#endif
 }
