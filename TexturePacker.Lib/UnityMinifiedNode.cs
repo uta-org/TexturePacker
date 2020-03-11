@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using _TexturePacker.Lib;
 using _TexturePacker.Lib.Interfaces;
 using UnityEngine.Extensions;
+using uzLib.Lite.ExternalCode.Extensions;
 
 namespace UnityEngine.Utils.TexturePackerTool
 {
