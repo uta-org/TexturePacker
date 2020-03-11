@@ -1,17 +1,22 @@
 ﻿#if !UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5
 
 using Newtonsoft.Json;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
 
 #endif
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using _TexturePacker.Lib;
+using Newtonsoft.Json;
+using UnityEngine;
+using UnityEngine.Extensions;
+using UnityEngine.Utils.TexturePackerTool;
 
 namespace _TexturePacker
 {
@@ -670,5 +675,6 @@ namespace _TexturePacker
             return Atlas.GetTextures(nodes.ToArray());
         }
     }
+
 #endif
 }
