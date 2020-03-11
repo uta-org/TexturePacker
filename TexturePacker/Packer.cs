@@ -13,7 +13,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _TexturePacker.Lib;
+
 using Newtonsoft.Json;
+
 using UnityEngine;
 using UnityEngine.Extensions;
 using UnityEngine.Utils.TexturePackerTool;
@@ -389,7 +391,7 @@ namespace _TexturePacker
         private Image CreateAtlasImage(Atlas _Atlas, List<string> _Sources)
         {
             Image img = new Bitmap(_Atlas.Width, _Atlas.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(img);
+            System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(img);
 
             if (DebugMode)
             {
