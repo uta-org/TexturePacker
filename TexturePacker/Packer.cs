@@ -92,11 +92,11 @@ namespace _TexturePacker
 
                 if (atlasSize <= 8192)
                 {
-                    Console.WriteLine($"Icon mode detected, resizing atlas to {AtlasSize} pixels.");
+                    Console.WriteLine($@"Icon mode detected, resizing atlas to {AtlasSize} pixels.");
                     AtlasSize = atlasSize;
                 }
                 else
-                    Console.WriteLine($"Atlas exceeded max size of 8192 pixels ({atlasSize})");
+                    Console.WriteLine($@"Atlas exceeded max size of 8192 pixels ({atlasSize})");
             }
 
             //2: generate as many atlases as needed (with the latest one as small as possible)
