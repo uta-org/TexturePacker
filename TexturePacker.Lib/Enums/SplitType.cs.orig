@@ -1,0 +1,26 @@
+<<<<<<< HEAD
+﻿namespace _TexturePacker.Lib
+=======
+﻿#if UNITY
+namespace UnityTexturePacker.Lib
+#else
+namespace TexturePacker.Lib
+#endif
+>>>>>>> fe36a5433a51448163b2a3fc34d51a818e040e53
+{
+    /// <summary>
+    /// Indicates in which direction to split an unused area when it gets used
+    /// </summary>
+    public enum SplitType
+    {
+        /// <summary>
+        /// Split Horizontally (textures are stacked up)
+        /// </summary>
+        Horizontal,
+
+        /// <summary>
+        /// Split verticaly (textures are side by side)
+        /// </summary>
+        Vertical,
+    }
+}

@@ -1,0 +1,18 @@
+<<<<<<< HEAD
+﻿namespace _TexturePacker
+=======
+﻿namespace TexturePacker
+>>>>>>> fe36a5433a51448163b2a3fc34d51a818e040e53
+{
+    public enum OutputType
+    {
+        TXT,
+        JSON,
+        MinifiedJSON,
+        JMin,
+        XML,
+        YAML,
+        CSV,
+        HTML
+    }
+}

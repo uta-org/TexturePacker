@@ -1,0 +1,25 @@
+﻿using System.Collections.Generic;
+<<<<<<< HEAD
+using _TexturePacker.Lib;
+
+namespace _TexturePacker
+=======
+using TexturePacker.Lib;
+
+namespace TexturePacker
+>>>>>>> fe36a5433a51448163b2a3fc34d51a818e040e53
+{
+    public class AtlasBlock
+    {
+        public List<Atlas> Atlases { get; }
+
+        private AtlasBlock()
+        {
+        }
+
+        public AtlasBlock(List<Atlas> atlases)
+        {
+            Atlases = atlases;
+        }
+    }
+}
