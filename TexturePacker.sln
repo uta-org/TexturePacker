@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker.Lib", "TexturePacker.Lib\TexturePacker.Lib.csproj", "{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker", "TexturePacker\TexturePacker.csproj", "{03B592BD-9C25-4E04-BBB0-856E27BAD336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TexturePacker.Lib.UnityEditor", "TexturePacker.Lib.UnityEditor\TexturePacker.Lib.UnityEditor.csproj", "{84506000-F9BD-4016-B655-9B03219F63B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		ForUnity|Any CPU = ForUnity|Any CPU
+		ForUnity|x86 = ForUnity|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Debug|x86.Build.0 = Debug|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|Any CPU.ActiveCfg = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|Any CPU.Build.0 = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|x86.ActiveCfg = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.ForUnity|x86.Build.0 = ForUnity|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|x86.ActiveCfg = Release|Any CPU
+		{88EE0F1F-68A6-4ADC-AC64-1E8D3CA0DAF9}.Release|x86.Build.0 = Release|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Debug|x86.Build.0 = Debug|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|Any CPU.ActiveCfg = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|Any CPU.Build.0 = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|x86.ActiveCfg = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.ForUnity|x86.Build.0 = ForUnity|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|x86.ActiveCfg = Release|Any CPU
+		{03B592BD-9C25-4E04-BBB0-856E27BAD336}.Release|x86.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Debug|x86.Build.0 = Debug|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|Any CPU.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|Any CPU.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|x86.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.ForUnity|x86.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{84506000-F9BD-4016-B655-9B03219F63B8}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E336C1E9-4256-4F0E-AB35-67FC10CBA269}
+	EndGlobalSection
+EndGlobal
