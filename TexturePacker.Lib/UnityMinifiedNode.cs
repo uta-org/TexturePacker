@@ -1,13 +1,22 @@
 ﻿//#if !(!UNITY_2020 && !UNITY_2019 && !UNITY_2018 && !UNITY_2017 && !UNITY_5)
 
 using System;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using _TexturePacker.Lib;
 using _TexturePacker.Lib.Interfaces;
 using UnityEngine.Extensions;
 using uzLib.Lite.ExternalCode.Extensions;
+
+#if UNITY_2020 || UNITY_2019 || UNITY_2018 || UNITY_2017 || UNITY_5
+
+using _System.Drawing;
+
+#else
+
+using System.Drawing;
+
+#endif
 
 namespace UnityEngine.Utils.TexturePackerTool
 {
